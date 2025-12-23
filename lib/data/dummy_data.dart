@@ -38,11 +38,10 @@ const dummyMeals = [
       
     ],
     title: 'Welcome drink',
-    affordability: Affordability.affordable,
-    complexity: Complexity.simple,
+    
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/colorful-welcome-drink-lemongress-butterfly-pea-juice-healthy-90761935.webp?raw=true',
-    duration: 20,
+    
     ingredients: [
       '4 Tomatoes',
       '1 Tablespoon of Olive Oil',
@@ -76,11 +75,10 @@ const dummyMeals = [
      
     ],
     title: 'Appam',
-    affordability: Affordability.affordable,
-    complexity: Complexity.simple,
+    
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/appam.jpg?raw=true',
-    duration: 10,
+   
     ingredients: [
       '1 Slice White Bread',
       '1 Slice Ham',
@@ -106,11 +104,10 @@ const dummyMeals = [
       
     ],
     title: 'Beef stew',
-    affordability: Affordability.pricey,
-    complexity: Complexity.simple,
+   
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/beef-stew-mlfk-googleFourByThree.jpg?raw=true',
-    duration: 45,
+ 
     ingredients: [
       '300g Cattle Hack',
       '1 Tomato',
@@ -139,11 +136,10 @@ const dummyMeals = [
       
     ],
     title: 'Kuruma',
-    affordability: Affordability.luxurious,
-    complexity: Complexity.challenging,
+   
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/Potato-Kurma-M2.jpg?raw=true',
-    duration: 60,
+
     ingredients: [
       '8 Veal Cutlets',
       '4 Eggs',
@@ -176,11 +172,10 @@ const dummyMeals = [
       
     ],
     title: 'Beef stew',
-    affordability: Affordability.luxurious,
-    complexity: Complexity.simple,
+   
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/beef-stew-mlfk-googleFourByThree.jpg?raw=true',
-    duration: 15,
+    
     ingredients: [
       'Arugula',
       'Lamb\'s Lettuce',
@@ -212,11 +207,10 @@ const dummyMeals = [
       
     ],
     title: 'Chicken fry',
-    affordability: Affordability.affordable,
-    complexity: Complexity.hard,
+ 
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/images.jpg?raw=true',
-    duration: 240,
+
     ingredients: [
       '4 Sheets of Gelatine',
       '150ml Orange Juice',
@@ -249,11 +243,10 @@ const dummyMeals = [
       
     ],
     title: 'Beef cutlet',
-    affordability: Affordability.affordable,
-    complexity: Complexity.simple,
+   
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/beef%20cut.jpg?raw=true',
-    duration: 20,
+
     ingredients: [
       '1 1/2 Cups all-purpose Flour',
       '3 1/2 Teaspoons Baking Powder',
@@ -282,11 +275,10 @@ const dummyMeals = [
       'c4',
     ],
     title: 'Beef biriyani',
-    affordability: Affordability.pricey,
-    complexity: Complexity.challenging,
+    
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/beef%20b.jpg?raw=true',
-    duration: 35,
+
     ingredients: [
       '4 Chicken Breasts',
       '1 Onion',
@@ -317,11 +309,10 @@ const dummyMeals = [
       'c4',
     ],
     title: 'Raita',
-    affordability: Affordability.affordable,
-    complexity: Complexity.hard,
+   
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/vegetable_raita.jpg?raw=true',
-    duration: 45,
+ 
     ingredients: [
       '1 Teaspoon melted Butter',
       '2 Tablespoons white Sugar',
@@ -368,11 +359,10 @@ const dummyMeals = [
       'c4',
     ],
     title: 'Pappadam',
-    affordability: Affordability.luxurious,
-    complexity: Complexity.simple,
+    
     imageUrl:
         'https://github.com/keerthikV1802/assets/blob/main/pappa.jpg?raw=true',
-    duration: 30,
+
     ingredients: [
       'White and Green Asparagus',
       '30g Pine Nuts',

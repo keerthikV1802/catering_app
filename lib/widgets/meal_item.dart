@@ -15,28 +15,9 @@ class MealItem extends StatelessWidget {
   final Meal meal;
   final void Function(Meal meal) onSelectMeal;
 
-  String get complexityText =>
-      meal.complexity.name[0].toUpperCase() + meal.complexity.name.substring(1);
+  
 
-  String get affordabilityText =>
-      meal.affordability.name[0].toUpperCase() +
-      meal.affordability.name.substring(1);
-
-  // prefer explicit pricePerPlate if model provides it; otherwise derive
-  double get pricePerPlate {
-    if ((meal.pricePerPlate ?? 0) > 0) {
-      return meal.pricePerPlate!;
-    }
-
-    switch (meal.affordability) {
-      case Affordability.affordable:
-        return 120;
-      case Affordability.pricey:
-        return 200;
-      case Affordability.luxurious:
-        return 300;
-    }
-  }
+  
 
   Widget _buildImage(BuildContext context) {
     // If imageUrl is empty/null, show a local fallback placeholder
@@ -126,7 +107,7 @@ class MealItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '₹${pricePerPlate.toStringAsFixed(0)} / plate',
+                  '₹${meal.pricePerPlate} / plate',
                   style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
@@ -158,20 +139,9 @@ class MealItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        MealItemTrait(
-                          icon: Icons.schedule,
-                          label: '${meal.duration} min',
-                        ),
+                        
                         const SizedBox(width: 12),
-                        MealItemTrait(
-                          icon: Icons.work,
-                          label: complexityText,
-                        ),
-                        const SizedBox(width: 12),
-                        MealItemTrait(
-                          icon: Icons.attach_money,
-                          label: '₹${pricePerPlate.toStringAsFixed(0)}',
-                        ),
+                        
                       ],
                     ),
                   ],

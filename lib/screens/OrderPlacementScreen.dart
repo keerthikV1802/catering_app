@@ -198,21 +198,23 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
     if (!mounted) return;
 
     await showDialog(
+      
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Order Placed Successfully'),
-        content: Text('Total Amount: ₹${total.toStringAsFixed(0)}'),
+        title: const Text('Order Placed Successfully',style: TextStyle(color: Colors.white),),
+        content: Text('Total Amount: ₹${total.toStringAsFixed(0)}',style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('OK'),
           ),
         ],
+        
       ),
     );
 
     if (!mounted) return;
-    Navigator.of(context).pushNamedAndRemoveUntil('/orders', (route) => false);
+Navigator.of(context).pop();
   }
 
   @override
@@ -261,26 +263,29 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            
             // FUNCTION DETAILS SECTION
             _buildSectionHeader('Function Details'),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
+            Card(color: Colors.blue.shade50,
+              child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
                       title: Text(
                         _functionDate == null
                             ? 'Select Date & Time *'
-                            : 'Date: ${_functionDate!.day}/${_functionDate!.month}/${_functionDate!.year} ${_functionDate!.hour}:${_functionDate!.minute.toString().padLeft(2, '0')}',
+                            : 'Date: ${_functionDate!.day}/${_functionDate!.month}/${_functionDate!.year} ${_functionDate!.hour}:${_functionDate!.minute.toString().padLeft(2, '0')}',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                       ),
                       trailing: ElevatedButton.icon(
                         onPressed: _pickDate,
                         icon: const Icon(Icons.calendar_today, size: 18),
                         label: const Text('Pick'),
                       ),
-                    ),
+                    ),),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _venueController,
@@ -566,12 +571,18 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
             // PLACE ORDER BUTTON
             ElevatedButton(
               onPressed: _placeOrder,
+              
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+            foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
+                
               ),
+              
               child: const Text(
                 'Place Order',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 255, 255, 255)),
+                
               ),
             ),
 

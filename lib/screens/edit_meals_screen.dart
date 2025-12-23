@@ -69,9 +69,7 @@ class _EditMealsScreenState extends State<EditMealsScreen> {
       categories: [],
       title: title,
       imageUrl: "", // no network call → no crash
-      duration: 10,
-      affordability: Affordability.affordable,
-      complexity: Complexity.simple,
+      
       ingredients: const [],
       steps: const [],
       isGlutenFree: false,

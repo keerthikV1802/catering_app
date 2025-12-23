@@ -103,6 +103,7 @@ class _ChefScreenState extends State<ChefScreen> {
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.red
                                       ),
                                     ),
                                     Container(
@@ -129,11 +130,11 @@ class _ChefScreenState extends State<ChefScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Function: ${DateFormat('dd MMM, hh:mm a').format(order.functionDate)}',
-                                  style: TextStyle(color: Colors.grey.shade700),
+                                  style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
                                 ),
                                 Text(
                                   'Guests: ${order.guestCount} | Venue: ${order.venue}',
-                                  style: TextStyle(color: Colors.grey.shade700),
+                                  style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
                                 ),
                                 const SizedBox(height: 12),
                                 LinearProgressIndicator(

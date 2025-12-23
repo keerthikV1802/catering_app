@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:catering_app/models/order.dart' as app_order;
+import 'package:catering_app/models/meal.dart'; // ADD THIS IMPORT
 
 class OrdersRepository {
   OrdersRepository._();
@@ -212,5 +213,88 @@ class OrdersRepository {
     return snapshot.docs
         .map((d) => app_order.Order.fromFirestore(d.id, d.data()))
         .toList();
+  }
+
+  // ============================================
+  // NEW METHODS FOR ADD/REMOVE MEALS
+  // ============================================
+
+  /// Add meals to existing order
+  Future<void> addMealsToOrder(String orderId, List<Meal> newMeals) async {
+    final order = await getOrderById(orderId);
+    if (order == null) throw Exception('Order not found');
+
+    // Combine existing and new meals
+    final updatedMeals = [...order.meals, ...newMeals];
+
+    // Create meal progress for new meals
+    final newMealProgress = newMeals.map((meal) => app_order.MealProgress(
+      mealId: meal.id,
+      mealTitle: meal.title,
+      status: app_order.MealStatus.notStarted,
+    )).toList();
+
+    final updatedMealProgress = [...order.mealProgress, ...newMealProgress];
+
+    // Calculate new total
+    final mealsTotal = updatedMeals.fold<double>(
+      0.0,
+      (sum, meal) => sum + (meal.pricePerPlate ?? 0),
+    ) * order.guestCount;
+
+    final customTotal = order.customItems.fold<double>(
+      0.0,
+      (sum, item) => sum + item.total,
+    );
+
+    final newTotalAmount = mealsTotal + customTotal + order.extraCharges - order.discount;
+
+    // Update Firestore
+    await _db.collection(_collection).doc(orderId).update({
+      'meals': updatedMeals.map((m) => m.toMap()).toList(),
+      'mealProgress': updatedMealProgress.map((mp) => mp.toMap()).toList(),
+      'totalAmount': newTotalAmount,
+      'finalAmount': newTotalAmount,
+    });
+  }
+
+  /// Remove meal from order
+  Future<void> removeMealFromOrder(String orderId, String mealId) async {
+    final order = await getOrderById(orderId);
+    if (order == null) throw Exception('Order not found');
+
+    // Cannot remove if only one meal left
+    if (order.meals.length <= 1) {
+      throw Exception('Cannot remove the last meal from order');
+    }
+
+    // Remove the meal
+    final updatedMeals = order.meals.where((m) => m.id != mealId).toList();
+
+    // Remove meal progress
+    final updatedMealProgress = order.mealProgress
+        .where((mp) => mp.mealId != mealId)
+        .toList();
+
+    // Recalculate total
+    final mealsTotal = updatedMeals.fold<double>(
+      0.0,
+      (sum, meal) => sum + (meal.pricePerPlate ?? 0),
+    ) * order.guestCount;
+
+    final customTotal = order.customItems.fold<double>(
+      0.0,
+      (sum, item) => sum + item.total,
+    );
+
+    final newTotalAmount = mealsTotal + customTotal + order.extraCharges - order.discount;
+
+    // Update Firestore
+    await _db.collection(_collection).doc(orderId).update({
+      'meals': updatedMeals.map((m) => m.toMap()).toList(),
+      'mealProgress': updatedMealProgress.map((mp) => mp.toMap()).toList(),
+      'totalAmount': newTotalAmount,
+      'finalAmount': newTotalAmount,
+    });
   }
 }

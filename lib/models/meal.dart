@@ -1,14 +1,4 @@
-enum Complexity {
-  simple,
-  challenging,
-  hard,
-}
 
-enum Affordability {
-  affordable,
-  pricey,
-  luxurious,
-}
 
 class Meal {
   const Meal({
@@ -18,9 +8,7 @@ class Meal {
     required this.imageUrl,
     required this.ingredients,
     required this.steps,
-    required this.duration,
-    required this.complexity,
-    required this.affordability,
+    
     required this.isGlutenFree,
     required this.isLactoseFree,
     required this.isVegan,
@@ -34,9 +22,7 @@ class Meal {
   final String imageUrl;
   final List<String> ingredients;
   final List<String> steps;
-  final int duration;
-  final Complexity complexity;
-  final Affordability affordability;
+  
   final bool isGlutenFree;
   final bool isLactoseFree;
   final bool isVegan;
@@ -52,9 +38,7 @@ class Meal {
       'imageUrl': imageUrl,
       'ingredients': ingredients,
       'steps': steps,
-      'duration': duration,
-      'complexity': complexity.name,
-      'affordability': affordability.name,
+     
       'isGlutenFree': isGlutenFree,
       'isLactoseFree': isLactoseFree,
       'isVegan': isVegan,
@@ -71,15 +55,7 @@ class Meal {
       imageUrl: map['imageUrl'] ?? '',
       ingredients: List<String>.from(map['ingredients'] ?? []),
       steps: List<String>.from(map['steps'] ?? []),
-      duration: map['duration'] ?? 0,
-      complexity: Complexity.values.firstWhere(
-        (e) => e.name == map['complexity'],
-        orElse: () => Complexity.simple,
-      ),
-      affordability: Affordability.values.firstWhere(
-        (e) => e.name == map['affordability'],
-        orElse: () => Affordability.affordable,
-      ),
+      
       isGlutenFree: map['isGlutenFree'] ?? false,
       isLactoseFree: map['isLactoseFree'] ?? false,
       isVegan: map['isVegan'] ?? false,

@@ -78,10 +78,10 @@ class _ChefOrderDetailScreenState extends State<ChefOrderDetailScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           const Text(
             'Meals to Prepare',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Color.fromARGB(255, 255, 255, 255)),
           ),
           const SizedBox(height: 8),
           ..._order.meals.map((meal) {
@@ -109,6 +109,7 @@ class _ChefOrderDetailScreenState extends State<ChefOrderDetailScreen> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Colors.pink
                             ),
                           ),
                         ),
