@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:catering_app/models/order.dart' as app_order;
-import 'package:catering_app/models/meal.dart'; // ADD THIS IMPORT
+import 'package:catering_app/models/meal.dart';
 
 class OrdersRepository {
   OrdersRepository._();
@@ -35,6 +35,19 @@ class OrdersRepository {
     return snapshot.docs
         .map((d) => app_order.Order.fromFirestore(d.id, d.data()))
         .toList();
+  }
+
+  /// Update meal price and recalculate total
+  Future<void> updateMealPriceAndTotal(
+    String orderId,
+    List<Meal> updatedMeals,
+    double newTotalAmount,
+  ) async {
+    await _db.collection(_collection).doc(orderId).update({
+      'meals': updatedMeals.map((m) => m.toMap()).toList(),
+      'totalAmount': newTotalAmount,
+      'finalAmount': newTotalAmount,
+    });
   }
 
   /// Get single order by ID
@@ -216,7 +229,7 @@ class OrdersRepository {
   }
 
   // ============================================
-  // NEW METHODS FOR ADD/REMOVE MEALS
+  // MEAL MANAGEMENT METHODS
   // ============================================
 
   /// Add meals to existing order
@@ -239,7 +252,7 @@ class OrdersRepository {
     // Calculate new total
     final mealsTotal = updatedMeals.fold<double>(
       0.0,
-      (sum, meal) => sum + (meal.pricePerPlate ?? 0),
+      (sum, meal) => sum + (meal.pricePerPlate),
     ) * order.guestCount;
 
     final customTotal = order.customItems.fold<double>(
@@ -279,7 +292,7 @@ class OrdersRepository {
     // Recalculate total
     final mealsTotal = updatedMeals.fold<double>(
       0.0,
-      (sum, meal) => sum + (meal.pricePerPlate ?? 0),
+      (sum, meal) => sum + (meal.pricePerPlate),
     ) * order.guestCount;
 
     final customTotal = order.customItems.fold<double>(

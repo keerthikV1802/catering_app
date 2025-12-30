@@ -1,16 +1,16 @@
 // lib/widgets/category_grid_item.dart
 import 'package:flutter/material.dart';
-import 'package:catering_app/models/category.dart';
+import 'package:catering_app/models/plate.dart';
 
 class CategoryGridItem extends StatelessWidget {
   const CategoryGridItem({
     super.key,
-    required this.category,
+    required this.plate,
     required this.onSelectCategory,
     this.perPlate,
   });
 
-  final Category category;
+  final Plate plate;
   final void Function() onSelectCategory;
   final double? perPlate; // sum of all plate-price for meals in this category
 
@@ -26,8 +26,8 @@ class CategoryGridItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
               colors: [
-                category.color.withOpacity(0.55),
-                category.color.withOpacity(0.9),
+                plate.color.withAlpha(140),
+                plate.color.withAlpha(230),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -36,17 +36,19 @@ class CategoryGridItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              category.title,
+              plate.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
             ),
             const Spacer(),
             if (perPlate != null)
               Text(
-                '₹${perPlate!.toStringAsFixed(0)} / plate',
+                'Rs. ${perPlate!.toStringAsFixed(0)} / plate',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.9),
+                      color: Theme.of(context).colorScheme.onSurface.withAlpha(230),
                     ),
               ),
           ],

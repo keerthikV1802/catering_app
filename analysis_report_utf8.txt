@@ -1,0 +1,68 @@
+﻿Analyzing catering_app...                                       
+
+   info - The parameter name 'sum' matches a visible type name - lib\data\orders_repository.dart:255:8 - avoid_types_as_parameter_names
+warning - The left operand can't be null, so the right operand is never executed - lib\data\orders_repository.dart:255:51 - dead_null_aware_expression
+   info - The parameter name 'sum' matches a visible type name - lib\data\orders_repository.dart:260:8 - avoid_types_as_parameter_names
+   info - The parameter name 'sum' matches a visible type name - lib\data\orders_repository.dart:295:8 - avoid_types_as_parameter_names
+warning - The left operand can't be null, so the right operand is never executed - lib\data\orders_repository.dart:295:51 - dead_null_aware_expression
+   info - The parameter name 'sum' matches a visible type name - lib\data\orders_repository.dart:300:8 - avoid_types_as_parameter_names
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\models\plate.dart:20:22 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\models\plate.dart:29:50 - deprecated_member_use
+   info - The file name 'OrderPlacementScreen.dart' isn't a lower_case_with_underscores identifier - lib\screens\OrderPlacementScreen.dart:1:1 - file_names
+warning - The left operand can't be null, so the right operand is never executed - lib\screens\OrderPlacementScreen.dart:56:43 - dead_null_aware_expression
+   info - Don't use 'BuildContext's across async gaps - lib\screens\OrderPlacementScreen.dart:79:7 - use_build_context_synchronously
+warning - The left operand can't be null, so the right operand is never executed - lib\screens\OrderPlacementScreen.dart:254:41 - dead_null_aware_expression
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\OrderPlacementScreen.dart:391:57 - invalid_null_aware_operator
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\addeditmeals.dart:37:57 - invalid_null_aware_operator
+   info - Don't invoke 'print' in production code - lib\screens\addeditmeals.dart:85:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\addeditmeals.dart:87:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\addeditmeals.dart:89:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\addeditmeals.dart:91:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\addeditmeals.dart:108:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\screens\cart_screen.dart:51:7 - use_build_context_synchronously
+  error - Undefined class 'Meal' - lib\screens\categories.dart:15:23 - undefined_class
+  error - The name 'Meal' isn't a type, so it can't be used as a type argument - lib\screens\categories.dart:16:14 - non_type_as_type_argument
+  error - The property 'categories' can't be unconditionally accessed because the receiver can be 'null' - lib\screens\categories.dart:31:49 - unchecked_use_of_nullable_value
+  error - The property 'pricePerPlate' can't be unconditionally accessed because the receiver can be 'null' - lib\screens\categories.dart:32:45 - unchecked_use_of_nullable_value
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\screens\edit_meals_screen.dart:97:12 - deprecated_member_use
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\screens\filters.dart:57:13 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:79:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:85:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:101:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:107:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:123:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:129:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:145:60 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\filters.dart:151:60 - deprecated_member_use
+warning - Unused import: 'package:catering_app/data/orders_repository.dart' - lib\screens\managemealsscreen.dart:4:8 - unused_import
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\managemealsscreen.dart:204:57 - invalid_null_aware_operator
+warning - The value of the field '_orders' isn't used - lib\screens\manager\manager_calendar_screen.dart:16:15 - unused_field
+warning - The declaration '_goToday' isn't referenced - lib\screens\manager\manager_calendar_screen.dart:33:8 - unused_element
+warning - The value of the local variable 'firstDay' isn't used - lib\screens\manager\manager_calendar_screen.dart:64:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\manager\manager_calendar_screen.dart:122:43 - deprecated_member_use
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\manager\order_details_screen.dart:98:31 - invalid_null_aware_operator
+warning - The left operand can't be null, so the right operand is never executed - lib\screens\manager\order_details_screen.dart:170:53 - dead_null_aware_expression
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\manager\order_details_screen.dart:444:51 - invalid_null_aware_operator
+warning - The receiver can't be null, so the null-aware operator '?.' is unnecessary - lib\screens\manager\order_details_screen.dart:738:47 - invalid_null_aware_operator
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\meal_details.dart:48:62 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\screens\meal_details.dart:70:64 - deprecated_member_use
+   info - The private field _addedOnlyMeals could be 'final' - lib\screens\meals.dart:28:14 - prefer_final_fields
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\category_grid_item.dart:29:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\category_grid_item.dart:30:29 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\category_grid_item.dart:41:58 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\category_grid_item.dart:49:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\category_grid_item.dart:49:73 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\main_drawer.dart:22:24 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:49:52 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:54:58 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:66:52 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:71:58 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:83:52 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:88:58 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:100:52 - deprecated_member_use
+   info - 'onBackground' is deprecated and shouldn't be used. Use onSurface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\main_drawer.dart:105:58 - deprecated_member_use
+warning - The left operand can't be null, so the right operand is never executed - lib\widgets\meal_item.dart:23:39 - dead_null_aware_expression
+   info - 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\meal_item.dart:29:46 - deprecated_member_use
+   info - 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre - lib\widgets\meal_item.dart:60:50 - deprecated_member_use
+  error - The name 'MyApp' isn't a class - test\widget_test.dart:16:35 - creation_with_non_type
+

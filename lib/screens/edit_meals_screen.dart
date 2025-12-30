@@ -21,7 +21,7 @@ class EditMealsScreen extends StatefulWidget {
 class _EditMealsScreenState extends State<EditMealsScreen> {
   late List<Meal> _editableMeals;
 
-  /// Newly added meals – should NOT appear in MealsScreen
+  /// Newly added meals Rs. €“ should NOT appear in MealsScreen
   final List<Meal> _newMeals = [];
 
   @override
@@ -68,7 +68,7 @@ class _EditMealsScreenState extends State<EditMealsScreen> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       categories: [],
       title: title,
-      imageUrl: "", // no network call → no crash
+      imageUrl: "", // no network call Rs. †’ no crash
       
       ingredients: const [],
       steps: const [],
@@ -110,7 +110,7 @@ class _EditMealsScreenState extends State<EditMealsScreen> {
             final meal = _editableMeals[i];
             return ListTile(
               title: Text(meal.title),
-              subtitle: Text("₹${meal.pricePerPlate.toStringAsFixed(0)} / plate"),
+              subtitle: Text("Rs. ${meal.pricePerPlate.toStringAsFixed(0)} / plate"),
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () => _removeMeal(i),

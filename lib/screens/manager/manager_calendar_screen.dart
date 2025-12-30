@@ -23,13 +23,12 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
   }
 
   Future<void> _loadOrders() async {
-  final orders = await OrdersRepository.instance.watchOrders().first;
-  setState(() {
-    _orders = orders;
-    _grouped = OrderDateHelper.groupByDate(orders);
-  });
-}
-
+    final orders = await OrdersRepository.instance.watchOrders().first;
+    setState(() {
+      _orders = orders;
+      _grouped = OrderDateHelper.groupByDate(orders);
+    });
+  }
 
   void _goToday() {
     setState(() {
@@ -43,6 +42,23 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
     });
   }
 
+  Future<void> _navigateToDateOrders(DateTime date, List<Order> orders) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OrdersByDateScreen(
+          date: date,
+          orders: orders,
+        ),
+      ),
+    );
+
+    // If result is true, it means an order was deleted, so refresh
+    if (result == true) {
+      await _loadOrders();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final firstDay = DateTime(_currentMonth.year, _currentMonth.month, 1);
@@ -52,7 +68,6 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendar'),
-        
       ),
       body: Column(
         children: [
@@ -67,7 +82,10 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
                     icon: const Icon(Icons.chevron_left)),
                 Text(
                   '${_monthName(_currentMonth.month)} ${_currentMonth.year}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 IconButton(
                     onPressed: () => _changeMonth(1),
@@ -88,8 +106,8 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
               itemCount: daysInMonth,
               itemBuilder: (ctx, index) {
                 final day = index + 1;
-                final date = DateTime(
-                    _currentMonth.year, _currentMonth.month, day);
+                final date =
+                    DateTime(_currentMonth.year, _currentMonth.month, day);
                 final key = OrderDateHelper.dateKey(date);
                 final count = _grouped[key]?.length ?? 0;
                 final isToday = _isSameDay(date, DateTime.now());
@@ -97,21 +115,11 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
                 return InkWell(
                   onTap: count == 0
                       ? null
-                      : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => OrdersByDateScreen(
-                                date: date,
-                                orders: _grouped[key]!,
-                              ),
-                            ),
-                          );
-                        },
+                      : () => _navigateToDateOrders(date, _grouped[key]!),
                   child: Container(
                     decoration: BoxDecoration(
                       color: isToday
-                          ? Colors.orange.withOpacity(0.25)
+                          ? Colors.orange.withAlpha(64)
                           : const Color.fromARGB(255, 218, 211, 211),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -120,8 +128,8 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('$day',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                         if (count > 0) ...[
                           const SizedBox(height: 4),
                           Container(
@@ -153,7 +161,17 @@ class _ManagerCalendarScreenState extends State<ManagerCalendarScreen> {
       a.year == b.year && a.month == b.month && a.day == b.day;
 
   String _monthName(int m) => const [
-        'January','February','March','April','May','June',
-        'July','August','September','October','November','December'
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
       ][m - 1];
 }

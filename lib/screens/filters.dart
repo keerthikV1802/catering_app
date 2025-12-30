@@ -54,15 +54,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
       //     }
       //   },
       // ),
-      body: WillPopScope(
-        onWillPop: () async {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
           Navigator.of(context).pop({
             Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
             Filter.vegan: _veganFilterSet,
           });
-          return false;
         },
         child: Column(
           children: [
@@ -76,13 +77,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
               title: Text(
                 'Gluten-free',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               subtitle: Text(
                 'Only include gluten-free meals.',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               activeColor: Theme.of(context).colorScheme.tertiary,
@@ -98,13 +99,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
               title: Text(
                 'Lactose-free',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               subtitle: Text(
                 'Only include lactose-free meals.',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               activeColor: Theme.of(context).colorScheme.tertiary,
@@ -120,13 +121,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
               title: Text(
                 'Vegetarian',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               subtitle: Text(
                 'Only include vegetarian meals.',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               activeColor: Theme.of(context).colorScheme.tertiary,
@@ -142,13 +143,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
               title: Text(
                 'Vegan',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               subtitle: Text(
                 'Only include vegan meals.',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
               activeColor: Theme.of(context).colorScheme.tertiary,

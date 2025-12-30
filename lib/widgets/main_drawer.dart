@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key, required this.onSelectScreen});
@@ -19,7 +19,7 @@ class MainDrawer extends StatelessWidget {
                   Theme.of(context)
                       .colorScheme
                       .primaryContainer
-                      .withOpacity(0.8),
+                      .withAlpha(204),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -46,12 +46,12 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.restaurant,
               size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             title: Text(
               'Meals',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 24,
                   ),
             ),
@@ -63,29 +63,29 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.restaurant_menu,
               size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             title: Text(
               'Chef Dashboard',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 24,
                   ),
             ),
             onTap: () {
-              onSelectScreen('chef'); // ✅ Changed from 'Chefs' to 'chef'
+              onSelectScreen('chef'); // Rs. œ… Changed from 'Chefs' to 'chef'
             },
           ),
           ListTile(
             leading: Icon(
               Icons.shopping_bag,
               size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             title: Text(
               'Orders',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 24,
                   ),
             ),
@@ -97,12 +97,12 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(
               Icons.settings,
               size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             title: Text(
               'Filters',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 24,
                   ),
             ),

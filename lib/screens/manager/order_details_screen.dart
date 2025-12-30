@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:catering_app/models/order.dart';
 import 'package:catering_app/models/meal.dart';
 import 'package:catering_app/data/orders_repository.dart';
-import 'package:catering_app/data/dummy_data.dart';
+import 'package:catering_app/data/meals_repository.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final Order order;
@@ -33,17 +33,19 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   Future<void> _updateOrderStatus(OrderStatus newStatus) async {
+    final isDeleting = newStatus == OrderStatus.rejected;
+    
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          newStatus == OrderStatus.accepted ? 'Accept Order?' : 'Delete Order?',
+          isDeleting ? 'Delete Order?' : 'Accept Order?',
           style: const TextStyle(color: Colors.white),
         ),
         content: Text(
-          newStatus == OrderStatus.accepted
-              ? 'This order will be sent to the chef for preparation.'
-              : 'This order will be rejected. This action cannot be undone.',
+          isDeleting
+              ? 'This order will be permanently deleted from the system. This action cannot be undone.'
+              : 'This order will be sent to the chef for preparation.',
           style: const TextStyle(color: Colors.white),
         ),
         actions: [
@@ -54,41 +56,169 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  newStatus == OrderStatus.accepted ? Colors.green : Colors.red,
+              backgroundColor: isDeleting ? Colors.red : Colors.green,
             ),
-            child: Text(newStatus == OrderStatus.accepted ? 'Accept' : 'Reject'),
+            child: Text(isDeleting ? 'Delete' : 'Accept'),
           ),
         ],
       ),
     );
 
     if (confirm == true) {
-      await OrdersRepository.instance.updateOrderStatus(_order.id, newStatus);
+      if (isDeleting) {
+        await OrdersRepository.instance.deleteOrder(_order.id);
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Order deleted successfully'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          Navigator.pop(context, true);
+        }
+      } else {
+        await OrdersRepository.instance.updateOrderStatus(_order.id, newStatus);
+        await _refreshOrder();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Order accepted and sent to chef'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _editMealPrice(Meal meal) async {
+    final priceController = TextEditingController(
+      text: meal.pricePerPlate.toStringAsFixed(0) ?? '0',
+    );
+
+    final newPrice = await showDialog<double>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Edit Price - ${meal.title}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: priceController,
+              decoration: const InputDecoration(
+                labelText: 'Price per Plate',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.currency_rupee),
+              ),
+              keyboardType: TextInputType.number,
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final price = double.tryParse(priceController.text);
+              if (price != null && price > 0) {
+                Navigator.pop(ctx, price);
+              }
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+
+    priceController.dispose();
+
+    if (newPrice != null) {
+      await _updateMealPrice(meal.id, newPrice);
+    }
+  }
+
+  Future<void> _updateMealPrice(String mealId, double newPrice) async {
+    try {
+      // Update the meal in the order's meals list
+      final updatedMeals = _order.meals.map((m) {
+        if (m.id == mealId) {
+          return Meal(
+            id: m.id,
+            categories: m.categories,
+            title: m.title,
+            imageUrl: m.imageUrl,
+            ingredients: m.ingredients,
+            steps: m.steps,
+            isGlutenFree: m.isGlutenFree,
+            isLactoseFree: m.isLactoseFree,
+            isVegan: m.isVegan,
+            isVegetarian: m.isVegetarian,
+            pricePerPlate: newPrice,
+          );
+        }
+        return m;
+      }).toList();
+
+      // Recalculate total amount
+      final mealsTotal = updatedMeals.fold<double>(
+        0.0,
+        (sum, meal) => sum + (meal.pricePerPlate),
+      ) * _order.guestCount;
+
+      final customTotal = _order.customItems.fold<double>(
+        0.0,
+        (sum, item) => sum + item.total,
+      );
+
+      final newTotalAmount = mealsTotal + customTotal + _order.extraCharges - _order.discount;
+
+      // Update in Firestore
+      await OrdersRepository.instance.updateMealPriceAndTotal(
+        _order.id,
+        updatedMeals,
+        newTotalAmount,
+      );
+
+      await _refreshOrder();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Price updated successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              newStatus == OrderStatus.accepted
-                  ? 'Order accepted and sent to chef'
-                  : 'Order rejected',
-            ),
+            content: Text('Error updating price: $e'),
+            backgroundColor: Colors.red,
           ),
         );
-        Navigator.pop(context);
       }
     }
   }
 
   Future<void> _showAddMealsDialog() async {
     final currentMealIds = _order.meals.map((m) => m.id).toSet();
-    final availableMeals = dummyMeals
+    // NEW: Fetch meals from repository instead of dummyMeals
+    final availableMeals = await MealsRepository.instance.getAllMeals();
+    final remainingMeals = availableMeals
         .where((m) => !currentMealIds.contains(m.id))
         .toList();
 
+    if (!mounted) return;
+
     final selectedMeals = await showDialog<List<Meal>>(
       context: context,
-      builder: (ctx) => _AddMealsDialog(availableMeals: availableMeals),
+      builder: (ctx) => _AddMealsDialog(availableMeals: remainingMeals),
     );
 
     if (selectedMeals != null && selectedMeals.isNotEmpty) {
@@ -308,8 +438,24 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     child: ListTile(
                       title: Text(meal.title),
-                      subtitle: Text(
-                        '₹${meal.pricePerPlate?.toStringAsFixed(0) ?? '0'} / plate',
+                      subtitle: Row(
+                        children: [
+                          Text(
+                            'Rs. ${meal.pricePerPlate.toStringAsFixed(0)} / plate',
+                          ),
+                          if (_order.status == OrderStatus.accepted ||
+                              _order.status == OrderStatus.inProgress) ...[
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () => _editMealPrice(meal),
+                              child: const Icon(
+                                Icons.edit,
+                                size: 16,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -358,7 +504,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         child: ListTile(
                           title: Text('${c.name} x${c.quantity}'),
                           trailing: Text(
-                            '₹${c.total.toStringAsFixed(0)}',
+                            'Rs. ${c.total.toStringAsFixed(0)}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -389,7 +535,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               ),
                             ),
                             Text(
-                              '₹${_order.totalAmount.toStringAsFixed(0)}',
+                              'Rs. ${_order.totalAmount.toStringAsFixed(0)}',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -444,7 +590,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () => _updateOrderStatus(OrderStatus.rejected),
-                      icon: const Icon(Icons.cancel),
+                      icon: const Icon(Icons.delete_forever),
                       label: const Text('DELETE'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -458,7 +604,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () => _updateOrderStatus(OrderStatus.accepted),
                       icon: const Icon(Icons.check_circle),
-                      label: const Text('Accept'),
+                      label: const Text('ACCEPT'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -509,7 +655,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         children: [
           Text(label),
           Text(
-            '₹${amount.toStringAsFixed(0)}',
+            'Rs. ${amount.toStringAsFixed(0)}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ],
@@ -554,7 +700,6 @@ class _AddMealsDialogState extends State<_AddMealsDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Create Custom Meal Button
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(bottom: 16),
@@ -569,7 +714,6 @@ class _AddMealsDialogState extends State<_AddMealsDialog> {
               ),
             ),
 
-            // Available Meals List
             if (widget.availableMeals.isEmpty)
               const Padding(
                 padding: EdgeInsets.all(16),
@@ -591,7 +735,7 @@ class _AddMealsDialogState extends State<_AddMealsDialog> {
                     return CheckboxListTile(
                       title: Text(meal.title),
                       subtitle: Text(
-                        '₹${meal.pricePerPlate?.toStringAsFixed(0) ?? '0'} / plate',
+                        'Rs. ${meal.pricePerPlate.toStringAsFixed(0) ?? '0'} / plate',
                       ),
                       value: isSelected,
                       onChanged: (checked) {
@@ -650,7 +794,6 @@ class _CreateCustomMealDialogState extends State<_CreateCustomMealDialog> {
     _priceController.dispose();
     super.dispose();
   }
-
   void _createMeal() {
     if (!_formKey.currentState!.validate()) return;
 
@@ -660,10 +803,9 @@ class _CreateCustomMealDialogState extends State<_CreateCustomMealDialog> {
       id: const Uuid().v4(),
       categories: ['custom'],
       title: _nameController.text.trim(),
-      imageUrl: '', // No image for custom meals
+      imageUrl: '',
       ingredients: [],
       steps: [],
-      
       isGlutenFree: false,
       isLactoseFree: false,
       isVegan: false,

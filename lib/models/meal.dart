@@ -33,7 +33,7 @@ class Meal {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'categories': categories,
+      'plates': categories,
       'title': title,
       'imageUrl': imageUrl,
       'ingredients': ingredients,
@@ -50,7 +50,7 @@ class Meal {
   factory Meal.fromMap(Map<String, dynamic> map) {
     return Meal(
       id: map['id'] ?? '',
-      categories: List<String>.from(map['categories'] ?? []),
+      categories: List<String>.from(map['plates'] ?? map['categories'] ?? []),
       title: map['title'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
       ingredients: List<String>.from(map['ingredients'] ?? []),

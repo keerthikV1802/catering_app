@@ -53,7 +53,7 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
     } else {
       perPlateTotal = _combinedMeals.fold<double>(
         0.0,
-        (s, m) => s + (m.pricePerPlate ?? 0),
+        (s, m) => s + m.pricePerPlate,
       );
     }
 
@@ -202,7 +202,7 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Order Placed Successfully',style: TextStyle(color: Colors.white),),
-        content: Text('Total Amount: ₹${total.toStringAsFixed(0)}',style: TextStyle(color: Colors.white)),
+        content: Text('Total Amount: Rs. ${total.toStringAsFixed(0)}',style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
@@ -214,7 +214,7 @@ class _OrderPlacementScreenState extends State<OrderPlacementScreen> {
     );
 
     if (!mounted) return;
-Navigator.of(context).pop();
+Navigator.of(context).pushNamedAndRemoveUntil('/orders', (route) => false);
   }
 
   @override
@@ -251,7 +251,7 @@ Navigator.of(context).pop();
     final computedTotal = _calcTotal();
     final perPlatePrice = _combinedMeals.fold<double>(
       0.0,
-      (s, m) => s + (m.pricePerPlate ?? 0),
+      (s, m) => s + m.pricePerPlate,
     );
 
     return Scaffold(
@@ -388,7 +388,7 @@ Navigator.of(context).pop();
                               children: [
                                 Expanded(child: Text(meal.title,style: TextStyle(color: Colors.amber),)),
                                 Text(
-                                  '₹${meal.pricePerPlate?.toStringAsFixed(0) ?? '0'}/plate',
+                                  'Rs. ${meal.pricePerPlate.toStringAsFixed(0)}/plate',
                                   style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.amber),
                                 ),
                               ],
@@ -403,7 +403,7 @@ Navigator.of(context).pop();
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '₹${perPlatePrice.toStringAsFixed(0)}',
+                          'Rs. ${perPlatePrice.toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -432,12 +432,12 @@ Navigator.of(context).pop();
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text(item.name),
-                          subtitle: Text('Qty: ${item.quantity} × ₹${item.pricePerPlate}'),
+                          subtitle: Text('Qty: ${item.quantity} x Rs. ${item.pricePerPlate}'),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '₹${item.total.toStringAsFixed(0)}',
+                                'Rs. ${item.total.toStringAsFixed(0)}',
                                 style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
                               IconButton(
@@ -554,7 +554,7 @@ Navigator.of(context).pop();
                       ),
                     ),
                     Text(
-                      '₹${computedTotal.toStringAsFixed(0)}',
+                      'Rs. ${computedTotal.toStringAsFixed(0)}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

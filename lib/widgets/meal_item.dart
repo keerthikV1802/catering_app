@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:catering_app/models/meal.dart';
-import 'package:catering_app/widgets/meal_item_trait.dart';
 
 class MealItem extends StatelessWidget {
   const MealItem({
@@ -13,7 +12,7 @@ class MealItem extends StatelessWidget {
   });
 
   final Meal meal;
-  final void Function(Meal meal) onSelectMeal;
+  final void Function(Meal meal)? onSelectMeal;
 
   
 
@@ -21,13 +20,13 @@ class MealItem extends StatelessWidget {
 
   Widget _buildImage(BuildContext context) {
     // If imageUrl is empty/null, show a local fallback placeholder
-    final imageUrl = meal.imageUrl ?? '';
+    final imageUrl = meal.imageUrl;
 
     if (imageUrl.trim().isEmpty) {
       return Container(
         height: 200,
         width: double.infinity,
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.2),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(51),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -58,7 +57,7 @@ class MealItem extends StatelessWidget {
           return Container(
             height: 200,
             width: double.infinity,
-            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(51),
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -90,7 +89,7 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () => onSelectMeal(meal),
+        onTap: onSelectMeal == null ? null : () => onSelectMeal!(meal),
         child: Stack(
           children: [
             // image or fallback
@@ -107,7 +106,7 @@ class MealItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '₹${meal.pricePerPlate} / plate',
+                  'Rs. ${meal.pricePerPlate} / plate',
                   style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
