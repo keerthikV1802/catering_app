@@ -44,4 +44,9 @@ class PlatesRepository {
       'mealIds': FieldValue.arrayRemove([mealId]),
     });
   }
+
+  /// Delete plate
+  Future<void> deletePlate(String plateId) async {
+    await _db.collection(_collection).doc(plateId).delete();
+  }
 }

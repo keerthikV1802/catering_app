@@ -14,7 +14,11 @@ class MealsRepository {
     await _db.collection(_collection).doc(meal.id).set(meal.toMap());
     // Sync with plates
     for (final plateId in meal.categories) {
-      await PlatesRepository.instance.addMealToPlate(plateId, meal.id);
+      try {
+        await PlatesRepository.instance.addMealToPlate(plateId, meal.id);
+      } catch (e) {
+        print('Sync error (add meal to plate $plateId during add): $e');
+      }
     }
   }
 
@@ -49,16 +53,26 @@ class MealsRepository {
       // Remove from plates that are no longer selected
       for (final oldPlateId in oldMeal.categories) {
         if (!meal.categories.contains(oldPlateId)) {
-          await PlatesRepository.instance.removeMealFromPlate(oldPlateId, meal.id);
+          try {
+            await PlatesRepository.instance.removeMealFromPlate(oldPlateId, meal.id);
+          } catch (e) {
+            print('Sync error (remove meal from plate $oldPlateId): $e');
+            // Ignore [not-found] errors for legacy categories
+          }
         }
       }
     }
 
-    await _db.collection(_collection).doc(meal.id).update(meal.toMap());
+    await _db.collection(_collection).doc(meal.id).set(meal.toMap(), SetOptions(merge: true));
 
     // Add to newly selected plates
     for (final plateId in meal.categories) {
-      await PlatesRepository.instance.addMealToPlate(plateId, meal.id);
+      try {
+        await PlatesRepository.instance.addMealToPlate(plateId, meal.id);
+      } catch (e) {
+        print('Sync error (add meal to plate $plateId): $e');
+        // Ignore [not-found] errors for legacy categories
+      }
     }
   }
 
@@ -69,7 +83,11 @@ class MealsRepository {
       final meal = Meal.fromMap(doc.data()!);
       // Remove from all plates
       for (final plateId in meal.categories) {
-        await PlatesRepository.instance.removeMealFromPlate(plateId, mealId);
+        try {
+          await PlatesRepository.instance.removeMealFromPlate(plateId, mealId);
+        } catch (e) {
+          print('Sync error (remove meal from plate $plateId during delete): $e');
+        }
       }
     }
     await _db.collection(_collection).doc(mealId).delete();

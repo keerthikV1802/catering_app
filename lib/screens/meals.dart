@@ -31,7 +31,7 @@ class _MealsScreenState extends State<MealsScreen> {
   Future<void> _openManageMeals() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (ctx) => const ManageMealsScreen(),
+        builder: (ctx) => ManageMealsScreen(plateId: widget.categoryId),
       ),
     );
     // Stream will auto-update, no need to pop

@@ -82,7 +82,7 @@ class _OrdersByDateScreenState extends State<OrdersByDateScreen> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '${o.guestCount} guests Rs. €¢ Rs. ${o.totalAmount.toStringAsFixed(0)}',
+                      '${o.guestCount} guests Rs. ${o.totalAmount.toStringAsFixed(0)}',
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _navigateToOrderDetails(o),

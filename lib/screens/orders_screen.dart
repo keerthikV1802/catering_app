@@ -28,7 +28,7 @@ class OrdersScreen extends StatelessWidget {
               return ListTile(
                 title: Text(o.categoryTitle),
                 subtitle: Text(
-                    '${o.guestCount} guests Rs. €¢ Rs. ${o.finalAmount.toStringAsFixed(0)}'),
+                    '${o.guestCount} guests Rs. ${o.finalAmount.toStringAsFixed(0)}'),
               );
             },
           );

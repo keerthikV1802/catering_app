@@ -28,6 +28,31 @@ class CategoriesScreen extends StatelessWidget {
     );
   }
 
+  void _deletePlate(BuildContext context, Plate plate) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Plate?'),
+        content: Text(
+            'Are you sure you want to delete "${plate.title}"? This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await PlatesRepository.instance.deletePlate(plate.id);
+              if (context.mounted) Navigator.pop(ctx);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   double _computePerPlateForCategory(String categoryId) {
     final meals = availableMeals.where((m) => m.categories.contains(categoryId));
     return meals.fold(0.0, (s, m) => s + m.pricePerPlate);
@@ -99,6 +124,7 @@ class CategoriesScreen extends StatelessWidget {
                       onSelectCategory: () {
                         _selectCategory(context, plate);
                       },
+                      onDelete: () => _deletePlate(context, plate),
                     );
                   },
                 ),

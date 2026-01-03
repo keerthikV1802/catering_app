@@ -5,7 +5,8 @@ import 'package:catering_app/data/meals_repository.dart';
 class ManageMealsScreen extends StatefulWidget {
   static const routeName = '/manage-meals';
 
-  const ManageMealsScreen({super.key});
+  final String? plateId;
+  const ManageMealsScreen({super.key, this.plateId});
 
   @override
   State<ManageMealsScreen> createState() => _ManageMealsScreenState();
@@ -75,6 +76,42 @@ class _ManageMealsScreenState extends State<ManageMealsScreen> {
             SnackBar(content: Text('Error deleting meal: $e')),
           );
         }
+      }
+    }
+  }
+
+  Future<void> _toggleMealAssignment(Meal meal) async {
+    if (widget.plateId == null) return;
+
+    final updatedCategories = List<String>.from(meal.categories);
+    if (updatedCategories.contains(widget.plateId)) {
+      updatedCategories.remove(widget.plateId);
+    } else {
+      updatedCategories.add(widget.plateId!);
+    }
+
+    final updatedMeal = Meal(
+      id: meal.id,
+      categories: updatedCategories,
+      title: meal.title,
+      imageUrl: meal.imageUrl,
+      ingredients: meal.ingredients,
+      steps: meal.steps,
+      isGlutenFree: meal.isGlutenFree,
+      isLactoseFree: meal.isLactoseFree,
+      isVegan: meal.isVegan,
+      isVegetarian: meal.isVegetarian,
+      pricePerPlate: meal.pricePerPlate,
+    );
+
+    try {
+      await MealsRepository.instance.updateMeal(updatedMeal);
+      await _loadMeals();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating meal assignment: $e')),
+        );
       }
     }
   }
@@ -166,35 +203,43 @@ class _ManageMealsScreenState extends State<ManageMealsScreen> {
                           itemCount: _filteredMeals.length,
                           itemBuilder: (ctx, index) {
                             final meal = _filteredMeals[index];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              child: ListTile(
-                                leading: meal.imageUrl.isNotEmpty
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.network(
-                                          meal.imageUrl,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (ctx, error, stack) =>
-                                              Container(
-                                            width: 60,
-                                            height: 60,
-                                            color: Colors.grey.shade300,
-                                            child: const Icon(Icons.restaurant),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: const Icon(Icons.restaurant),
-                                      ),
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: ListTile(
+                                  onTap: widget.plateId != null 
+                                      ? () => _toggleMealAssignment(meal) 
+                                      : null,
+                                  leading: widget.plateId != null
+                                      ? Checkbox(
+                                          value: meal.categories.contains(widget.plateId),
+                                          onChanged: (_) => _toggleMealAssignment(meal),
+                                        )
+                                      : (meal.imageUrl.isNotEmpty
+                                          ? ClipRRect(
+                                              borderRadius: BorderRadius.circular(8),
+                                              child: Image.network(
+                                                meal.imageUrl,
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (ctx, error, stack) =>
+                                                    Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  color: Colors.grey.shade300,
+                                                  child: const Icon(Icons.restaurant),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              width: 60,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade300,
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: const Icon(Icons.restaurant),
+                                            )),
                                 title: Text(
                                   meal.title,
                                   style: const TextStyle(fontWeight: FontWeight.bold),

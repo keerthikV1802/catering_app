@@ -191,7 +191,6 @@ class _AddEditMealScreenState extends State<AddEditMealScreen> {
                     children: availablePlates.map((plate) {
                       return CheckboxListTile(
                         title: Text(plate.title),
-                        subtitle: Text(plate.id),
                         value: _selectedCategories.contains(plate.id),
                         onChanged: (bool? value) {
                           setState(() {

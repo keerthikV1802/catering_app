@@ -7,11 +7,13 @@ class CategoryGridItem extends StatelessWidget {
     super.key,
     required this.plate,
     required this.onSelectCategory,
+    this.onDelete,
     this.perPlate,
   });
 
   final Plate plate;
   final void Function() onSelectCategory;
+  final void Function()? onDelete;
   final double? perPlate; // sum of all plate-price for meals in this category
 
   @override
@@ -32,24 +34,39 @@ class CategoryGridItem extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             )),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Text(
-              plate.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  plate.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                ),
+                const Spacer(),
+                if (perPlate != null)
+                  Text(
+                    'Rs. ${perPlate!.toStringAsFixed(0)} / plate',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withAlpha(230),
+                        ),
                   ),
+              ],
             ),
-            const Spacer(),
-            if (perPlate != null)
-              Text(
-                'Rs. ${perPlate!.toStringAsFixed(0)} / plate',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withAlpha(230),
-                    ),
+            if (onDelete != null)
+              Positioned(
+                top: -4,
+                right: -4,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: const Icon(Icons.delete, color: Colors.white70, size: 20),
+                  onPressed: onDelete,
+                ),
               ),
           ],
         ),
