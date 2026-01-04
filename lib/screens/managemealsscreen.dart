@@ -83,34 +83,31 @@ class _ManageMealsScreenState extends State<ManageMealsScreen> {
   Future<void> _toggleMealAssignment(Meal meal) async {
     if (widget.plateId == null) return;
 
-    final updatedCategories = List<String>.from(meal.categories);
-    if (updatedCategories.contains(widget.plateId)) {
-      updatedCategories.remove(widget.plateId);
-    } else {
-      updatedCategories.add(widget.plateId!);
-    }
-
-    final updatedMeal = Meal(
-      id: meal.id,
-      categories: updatedCategories,
-      title: meal.title,
-      imageUrl: meal.imageUrl,
-      ingredients: meal.ingredients,
-      steps: meal.steps,
-      isGlutenFree: meal.isGlutenFree,
-      isLactoseFree: meal.isLactoseFree,
-      isVegan: meal.isVegan,
-      isVegetarian: meal.isVegetarian,
-      pricePerPlate: meal.pricePerPlate,
-    );
+    final isAdding = !meal.categories.contains(widget.plateId);
+    
+    // --- Optimistic UI Update ---
+    setState(() {
+      final index = _meals.indexWhere((m) => m.id == meal.id);
+      if (index != -1) {
+        final updatedCategories = List<String>.from(meal.categories);
+        if (isAdding) {
+          updatedCategories.add(widget.plateId!);
+        } else {
+          updatedCategories.remove(widget.plateId);
+        }
+        _meals[index] = _meals[index].copyWith(categories: updatedCategories);
+      }
+    });
 
     try {
-      await MealsRepository.instance.updateMeal(updatedMeal);
-      await _loadMeals();
+      // Use the fast specialized update
+      await MealsRepository.instance.togglePlateInMeal(meal.id, widget.plateId!, isAdding);
     } catch (e) {
+      // Revert UI on failure
+      await _loadMeals();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating meal assignment: $e')),
+          SnackBar(content: Text('Failed to update: $e')),
         );
       }
     }

@@ -102,4 +102,27 @@ class MealsRepository {
       meal.title.toLowerCase().contains(query.toLowerCase())
     ).toList();
   }
+
+  /// Specialized method for toggling a plate in a meal without full sync
+  Future<void> togglePlateInMeal(String mealId, String plateId, bool isAdding) async {
+    final batch = _db.batch();
+    
+    // Update Meal document
+    final mealRef = _db.collection(_collection).doc(mealId);
+    batch.update(mealRef, {
+      'plates': isAdding 
+          ? FieldValue.arrayUnion([plateId]) 
+          : FieldValue.arrayRemove([plateId]),
+    });
+
+    // Update Plate document
+    final plateRef = _db.collection('plates').doc(plateId);
+    batch.update(plateRef, {
+      'mealIds': isAdding 
+          ? FieldValue.arrayUnion([mealId]) 
+          : FieldValue.arrayRemove([mealId]),
+    });
+
+    await batch.commit();
+  }
 }

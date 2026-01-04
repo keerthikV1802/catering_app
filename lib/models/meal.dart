@@ -63,4 +63,32 @@ class Meal {
       pricePerPlate: (map['pricePerPlate'] ?? 0).toDouble(),
     );
   }
+
+  Meal copyWith({
+    String? id,
+    List<String>? categories,
+    String? title,
+    String? imageUrl,
+    List<String>? ingredients,
+    List<String>? steps,
+    bool? isGlutenFree,
+    bool? isLactoseFree,
+    bool? isVegan,
+    bool? isVegetarian,
+    double? pricePerPlate,
+  }) {
+    return Meal(
+      id: id ?? this.id,
+      categories: categories ?? this.categories,
+      title: title ?? this.title,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ingredients: ingredients ?? this.ingredients,
+      steps: steps ?? this.steps,
+      isGlutenFree: isGlutenFree ?? this.isGlutenFree,
+      isLactoseFree: isLactoseFree ?? this.isLactoseFree,
+      isVegan: isVegan ?? this.isVegan,
+      isVegetarian: isVegetarian ?? this.isVegetarian,
+      pricePerPlate: pricePerPlate ?? this.pricePerPlate,
+    );
+  }
 }

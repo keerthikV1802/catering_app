@@ -76,7 +76,35 @@ class CategoriesScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               final title = controller.text.trim();
-              if (title.isNotEmpty) {
+              if (title.isEmpty) return;
+
+              // 1. Check for special characters
+              final specialCharRegex = RegExp(r'[!@#%^&*(),.?":{}|<>]');
+              if (specialCharRegex.hasMatch(title)) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Special characters are not allowed in plate names')),
+                  );
+                }
+                return;
+              }
+
+              // 2. Check for duplicate names (case-insensitive)
+              try {
+                final existingPlates = await PlatesRepository.instance.getAllPlates();
+                final isDuplicate = existingPlates.any(
+                  (p) => p.title.toLowerCase() == title.toLowerCase()
+                );
+
+                if (isDuplicate) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('A plate named "$title" already exists')),
+                    );
+                  }
+                  return;
+                }
+
                 final newPlate = Plate(
                   id: const Uuid().v4(),
                   title: title,
@@ -84,6 +112,12 @@ class CategoriesScreen extends StatelessWidget {
                 );
                 await PlatesRepository.instance.addPlate(newPlate);
                 if (context.mounted) Navigator.pop(ctx);
+              } catch (e) {
+                 if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error adding plate: $e')),
+                  );
+                }
               }
             },
             child: const Text('Add'),
